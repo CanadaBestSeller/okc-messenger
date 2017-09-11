@@ -73,7 +73,7 @@ def generateQueueEntry(handle):
     import hashlib
     hasher = hashlib.md5()
     hasher.update(handle.encode('utf-8'))
-    match_id = hasher.hexdigest()[:8].upper()
+    match_id = 'manual-' + hasher.hexdigest()[:8].upper()
     return QueueEntry(match_id, handle)
 
 def consumeFromQueue():
