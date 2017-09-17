@@ -10,7 +10,9 @@ from messenger.debugger import Debugger
 from messenger.consumer import Consumer
 
 # Consumer controls
-CONSUMPTION_CYCLE_DELAY = 2
+FIRST_MESSAGE = "You seem fun and silly, with a good head on your shoulders :) " \
+                "I wouldn't mind exploring the possibility of enhancing your life and exposing you to my awesomeness"
+CONSUMPTION_CYCLE_DELAY_IN_SECONDS = 2
 QUEUE_FILE_NAME = 'queue-messages.txt'
 DEBUGGER_INPUT_FILE = 'add-links-here-to-debug.txt'
 
@@ -33,13 +35,17 @@ def consume(inbound_port, outbound_port):
     debugger = Debugger(DEBUGGER_INPUT_FILE, outbound_port)
     consumer = Consumer(inbound_port, outbound_port)
     while True:
-        logging.info("Finished.\n\n\n---------- Consuming from DEBUGGER ----------")
-        debugger.consume()
-        time.sleep(CONSUMPTION_CYCLE_DELAY)
+        try:
+            logging.info("Finished.\n\n\n---------- Consuming from CONSUMER ----------")
+            consumer.consume()
+            time.sleep(CONSUMPTION_CYCLE_DELAY_IN_SECONDS)
 
-        logging.info("Finished.\n\n\n---------- Consuming from CONSUMER ----------")
-        consumer.consume()
-        time.sleep(CONSUMPTION_CYCLE_DELAY)
+            logging.info("Finished.\n\n\n---------- Consuming from DEBUGGER ----------")
+            debugger.consume()
+            time.sleep(CONSUMPTION_CYCLE_DELAY_IN_SECONDS)
+        except KeyboardInterrupt:
+            consumer.close()
+            break
 
 
 def initialize_logger():

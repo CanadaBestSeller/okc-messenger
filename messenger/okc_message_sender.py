@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
-import logging
 import re
 
-from lxml import html
 from messenger import utils
-from messenger import xpath
 
 
-class Sender(object):
+class OkcMessageSender(object):
     """Send Messages to an okcupid user."""
 
     def __init__(self, session):
@@ -37,7 +34,8 @@ class Sender(object):
             username, message, thread_id or 0, authcode
         )
         response = self._session.okc_get('mailbox', params=params)
-        response_dict = response.json()
+        return response.json()
+        # response_dict = response.json()
         # logging.info(simplejson.dumps({'message_send_response': response_dict}))
         # return MessageInfo(response_dict.get('threadid'), response_dict['msgid'])
 
