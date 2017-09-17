@@ -1,4 +1,6 @@
 .DS_Store
 *.swp
 *__pycache__
-consumer.log
+log.txt
+*.idea
+*.iml
