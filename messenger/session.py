@@ -6,8 +6,7 @@ import time
 
 import requests
 
-from . import profile
-from . import settings
+import profile
 
 
 class Session(object):
@@ -24,29 +23,13 @@ class Session(object):
     }
 
     @classmethod
-    def login(
-            cls, username=None, password=None, requests_session=None,
-            rate_limit=None
-    ):
-        """Get a session that has authenticated with okcupid.com.
-        If no username and password is supplied, the ones stored in
-        :class:`okcupyd.settings` will be used.
-
-        :param username: The username to log in with.
-        :type username: str
-        :param password: The password to log in with.
-        :type password: str
-        :param rate_limit: Average time in seconds to wait between requests to OKC.
-        :type rate_limit: float
-        """
+    def login(cls, username, password, requests_session=None, rate_limit=None):
         requests_session = requests_session or requests.Session()
         session = cls(requests_session, rate_limit)
         # settings.USERNAME and settings.PASSWORD should not be made
         # the defaults to their respective arguments because doing so
         # would prevent this function from picking up any changes made
         # to those values after import time.
-        username = username or settings.USERNAME
-        password = password or settings.PASSWORD
         session.do_login(username, password)
         return session
 
