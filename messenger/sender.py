@@ -16,7 +16,7 @@ class Sender(object):
 
     def _get_authcode(self, username):
         response = self._session.okc_get('profile/{0}'.format(username))
-        return get_authcode(html.fromstring(response.content))
+        return get_authcode(response.content)
 
     def message_request_parameters(self, username, message,
                                    thread_id, authcode):
@@ -43,14 +43,8 @@ class Sender(object):
 
 
 @utils.curry
-def get_js_variable(html_response, variable_name):
-    """
-    Try to parse the profile page HTML response for something called "authcode", which will allow us to message the profile
-    """
-    script_elements = xpath.XPathBuilder.script.apply_(html_response)  # Here's problem - this "script" attribute seems to be currier that passes a tree to "apply_()"
-    html_response = u'\n'.join(script_element.text_content()  # However, this is not working. Worst comes to worst we might have to do a plain-text regex for authcode
-                               for script_element in script_elements)
-    return re.search('var {0} = "(.*?)";'.format(variable_name), html_response).group(1)
+def get_js_variable(html_response_content, variable_name):
+    return re.search('var {0} = "(.*?)";'.format(variable_name), html_response_content.decode('utf-8')).group(1)
 
 
 get_authcode = get_js_variable(variable_name='AUTHCODE')
