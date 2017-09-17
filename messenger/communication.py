@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import logging
 import json
 import socket
 
@@ -26,6 +25,22 @@ class Request(dict):
         dict.__init__(self, request_id=request_id or str(datetime.utcnow()))
 
 
+class Sender(object):
+    def __init__(self, identifier, destination_host, destination_port):
+        self.identifier = identifier
+        self.destination_host = destination_host
+        self.destination_port = destination_port
+        self._socket = socket.socket()
+
+    def send(self, message_request):
+        self._socket.connect((self.destination_host, self.destination_port))
+        self._socket.send(json.dumps(message_request).encode())
+        self._socket.close()
+
+    def __repr__(self):
+        return '<{0} Sender @ {1}:{2}>'.format(self.identifier, self.destination_host, self.destination_port)
+
+
 class Receiver(object):
     def __init__(self, identifier, inbound_host, inbound_port, default_timeout):
         self.identifier = identifier
@@ -34,7 +49,7 @@ class Receiver(object):
         self.default_timeout = default_timeout
 
         s = socket.socket()
-        s.bind((inbound_host, inbound_port))
+        # s.bind((inbound_host, inbound_port))
         s.settimeout(default_timeout)
         s.listen(MAX_TCP_CONNECTIONS)
         self._socket = s
@@ -52,18 +67,3 @@ class Receiver(object):
     def __repr__(self):
         return '<{0} Receiver @ {1}:{2}>'.format(self.identifier, self.inbound_host, self.inbound_port)
 
-
-class Sender(object):
-    def __init__(self, identifier, destination_host, destination_port):
-        self.identifier = identifier
-        self.destination_host = destination_host
-        self.destination_port = destination_port
-        self._socket = socket.socket()
-
-    def send(self, message_request):
-        self._socket.connect((self.destination_host, self.destination_port))
-        self._socket.send(json.dumps(message_request).encode())
-        self._socket.close()
-
-    def __repr__(self):
-        return '<{0} Sender @ {1}:{2}>'.format(self.identifier, self.destination_host, self.destination_port)

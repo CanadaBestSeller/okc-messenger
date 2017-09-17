@@ -20,7 +20,7 @@ class Debugger(object):
         open(self.input_file, 'w').close()  # clear input_file
         logging.info('{0} input file ({1}) cleared'.format(self, input_file))
 
-        self._sender = Sender(self.outbound_host, self.outbound_port)
+        self._sender = Sender('OKC Messenger Debugger', self.outbound_host, self.outbound_port)
 
     def __repr__(self):
         return '<OKC-messenger Debugger. Destination: {0}:{1}>'.format(self.outbound_host, self.outbound_port)
