@@ -33,7 +33,7 @@ class Sender(object):
         self._socket = socket.socket()
 
     def send(self, message_request):
-        self._socket.connect((self.destination_host, self.destination_port))
+        self._socket.connect((self.destination_host, int(self.destination_port)))
         self._socket.send(json.dumps(message_request).encode())
         self._socket.close()
 
