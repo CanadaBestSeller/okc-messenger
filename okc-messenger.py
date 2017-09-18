@@ -36,7 +36,7 @@ def main():
 
 
 def consume(inbound_port, outbound_port):
-    debugger = Debugger(DEBUGGER_INPUT_FILE, HOST, outbound_port)
+    debugger = Debugger(DEBUGGER_INPUT_FILE, HOST, inbound_port)  # Attach to inbound to simulate real input
     consumer = Consumer(HOST, inbound_port, outbound_port, DEFAULT_TIMEOUT_IN_SECONDS, USERNAME, PASSWORD)
     while True:
         try:

@@ -1,29 +1,34 @@
 #!/usr/bin/env python3
 
 import logging
+import socketserver
+
 from messenger.communication import Receiver
 from messenger.okc_message_sender import OkcMessageSender
 from messenger.session import Session
 
 
-class Consumer(object):
+class Consumer(socketserver.BaseRequestHandler):
     """
     Consume message calls from inbound port.
     Sends notifications to outbound port when reply has been received.
     """
 
-    def __init__(self, host, inbound_port, outbound_port, default_timeout, username, password):
+    def __init__(self, host, serving_port, outbound_port, default_timeout, username, password):
         self.host = host
-        self.inbound_port = inbound_port
+        self.inbound_port = serving_port
         self.outbound_port = outbound_port
         self.default_timeout = default_timeout
         self.username = username
         self.password = password
 
-        self._receiver = Receiver('OKC Messenger Consumer', host, inbound_port, default_timeout)
+        self._receiver = Receiver('OKC Messenger Consumer', host, serving_port, default_timeout)
 
         logging.info("INBOUND port @ {0} for receiving messages.".format(self.inbound_port))
         logging.info("OUTBOUND port @ {0} for sending notifications.".format(self.outbound_port))
+
+    def handle(self):
+
 
     def consume(self, timeout=None):
         self._receiver.receive(timeout or self.default_timeout)

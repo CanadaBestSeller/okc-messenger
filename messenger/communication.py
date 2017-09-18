@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import json
 import socket
 
@@ -30,11 +31,17 @@ class Sender(object):
         self.identifier = identifier
         self.destination_host = destination_host
         self.destination_port = destination_port
-        self._socket = socket.socket()
+        logging.info("Initialized {}".format(self.__repr__()))
 
     def send(self, message_request):
-        self._socket.connect((self.destination_host, self.destination_port))
+        self._socket = socket.socket()
+        self._socket.connect((self.destination_host, int(self.destination_port)))
         self._socket.send(json.dumps(message_request).encode())
+        logging.info("Sent to {}".format(self.destination_host, self.destination_port))
+
+        received = self._socket.recv(1024)
+        logging.info("Received: {}".format(received))
+
         self._socket.close()
 
     def __repr__(self):

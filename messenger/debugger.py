@@ -8,22 +8,22 @@ from messenger.communication import Request, Sender
 class Debugger(object):
     """
     Consume links from given file
-    Sends message call to outbound_port which can be picked up by Consumer
+    Sends message call to destination_port which can be picked up by Consumer
     """
 
-    def __init__(self, input_file, outbound_host, outbound_port):
+    def __init__(self, input_file, destination_host, destination_port):
         self.input_file = input_file
-        self.outbound_host = outbound_host
-        self.outbound_port = outbound_port
+        self.destination_host = destination_host
+        self.destination_port = destination_port
         logging.info('{0} initialized'.format(self))
 
         open(self.input_file, 'w').close()  # clear input_file
         logging.info('{0} input file ({1}) cleared'.format(self, input_file))
 
-        self._sender = Sender('OKC Messenger Debugger', self.outbound_host, self.outbound_port)
+        self._sender = Sender('OKC Messenger Debugger', self.destination_host, self.destination_port)
 
     def __repr__(self):
-        return '<OKC-messenger Debugger. Destination: {0}:{1}>'.format(self.outbound_host, self.outbound_port)
+        return '<OKC-messenger Debugger. Destination: {0}:{1}>'.format(self.destination_host, self.destination_port)
 
     def consume(self):
         if Debugger.has_input_in(self.input_file):
