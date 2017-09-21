@@ -14,25 +14,22 @@ class Consumer(socketserver.BaseRequestHandler):
     Sends notifications to outbound port when reply has been received.
     """
 
-    def __init__(self, host, serving_port, outbound_port, default_timeout, username, password):
+    def __init__(self, host, serving_port, username, password):
         self.host = host
         self.inbound_port = serving_port
-        self.outbound_port = outbound_port
-        self.default_timeout = default_timeout
         self.username = username
         self.password = password
 
-        self._receiver = Receiver('OKC Messenger Consumer', host, serving_port, default_timeout)
-
-        logging.info("INBOUND port @ {0} for receiving messages.".format(self.inbound_port))
-        logging.info("OUTBOUND port @ {0} for sending notifications.".format(self.outbound_port))
+        logging.info("Consuming messages @ {}.".format(self.host, self.inbound_port))
 
     def handle(self):
+        data = self.request.recv(1024).strip()
+        print("{} wrote:".format(self.client_address[0]))
+        self.process(data)
 
-
-    def consume(self, timeout=None):
-        self._receiver.receive(timeout or self.default_timeout)
-        logging.info("Consuming stuff...")
+    def process(self, data):
+        # just send back the same data, but upper-cased
+        self.request.sendall(self.data.upper())
 
     def send_message(self):
         current_session = Session(self.username, self.password)
