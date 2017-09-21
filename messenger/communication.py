@@ -39,8 +39,10 @@ class Sender(object):
         self._socket.send(json.dumps(message_request).encode())
         logging.info("Sent to {}".format(self.destination_host, self.destination_port))
 
-        received = self._socket.recv(1024)
-        logging.info("Received: {}".format(received))
+        # We should also optionally receive some ack from the server, but I couldn't get this to work
+        # The recv() method call just stalls
+        # received = self._socket.recv(1024)
+        # logging.info("Received: {}".format(received))
 
         self._socket.close()
 
