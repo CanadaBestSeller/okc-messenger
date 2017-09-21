@@ -34,7 +34,10 @@ class Sender(object):
         logging.info("Initialized {}".format(self.__repr__()))
 
     def send(self, message_request):
+<<<<<<< HEAD
         self._socket = socket.socket()
+=======
+>>>>>>> eeb7478f87ee913d4394ff926fa670e9c916b003
         self._socket.connect((self.destination_host, int(self.destination_port)))
         self._socket.send(json.dumps(message_request).encode())
         logging.info("Sent to {}".format(self.destination_host, self.destination_port))
